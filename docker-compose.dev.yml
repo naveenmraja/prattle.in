@@ -1,0 +1,67 @@
+version: '3.8'
+services:
+  redis-dev-server:
+    image: "redis:7.0.4-alpine"
+    container_name: redis-dev-server
+    restart: always
+    volumes:
+      - "./docker/redis/data:/home/redis/data"
+    working_dir: /home/redis
+  mongo-dev-server:
+    image: "mongo:latest"
+    container_name: mongo-dev-server
+    restart: always
+    volumes:
+      - "./docker/mongo/data:/data/db"
+    env_file:
+      - ./.env.mongo.dev
+  prattle-dev-backend:
+    build:
+      context: ./server
+      dockerfile: DockerFile.dev
+    container_name: prattle-dev-backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./.env.backend.dev
+    depends_on:
+      - redis-dev-server
+      - mongo-dev-server
+    links:
+      - redis-dev-server
+      - mongo-dev-server
+    volumes:
+      - "/usr/prattle/server/node_modules"
+      - "./server:/usr/prattle/server"
+  prattle-dev-frontend:
+    build:
+      context: ./client
+      dockerfile: DockerFile.dev
+    image: naveenmraja/prattle-dev-frontend:0.1
+    container_name: prattle-dev-frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./.env.frontend.dev
+    volumes:
+      - "/usr/prattle/client/node_modules"
+      - "./client:/usr/prattle/client"
+    environment:
+      - WDS_SOCKET_PORT=0
+    depends_on:
+      - prattle-dev-backend
+    links:
+      - prattle-dev-backend
+  nginx-dev :
+    build :
+      context: ./nginx
+      dockerfile: DockerFile.dev
+    container_name: nginx-dev
+    ports :
+      - "8000:80"
+    depends_on:
+      - prattle-dev-backend
+      - prattle-dev-frontend
+    links:
+      - prattle-dev-backend
+      - prattle-dev-frontend
