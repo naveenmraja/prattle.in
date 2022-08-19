@@ -28,8 +28,8 @@ Prattle is an anonymous chat app and a great way to meet new people. Prattle wil
       GOOGLE_SECRET_KEY="$YOUR_GOOGLE_SECRET_KEY"
 
 - Run the following command in the root directory to start up the development server :
-
-  	docker-compose -f docker-compose.dev.yml up --build
+       
+       docker-compose -f docker-compose.dev.yml up --build
 
 **For Production build and deployment :**
 
