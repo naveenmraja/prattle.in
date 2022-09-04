@@ -2,7 +2,7 @@
 
 [Prattle](http://prattle.in) is an anonymous chat app and a great way to meet new people. Prattle will pick someone random for you and create a private chat session. If you prefer to add your interests, Prattle will look to connect you with someone who shares some of your interests.
 
-| ![gwFSAx.md.png](https://iili.io/gwFSAx.md.png) |![gwF89j.md.png](https://iili.io/gwF89j.md.png)  |
+| [![gwFSAx.md.png](https://iili.io/gwFSAx.md.png)](https://freeimage.host/i/gwFSAx) |[![gwF89j.md.png](https://iili.io/gwF89j.md.png)](https://freeimage.host/i/gwF89j)  |
 |--|--|
 
 **Technologies Used:**
@@ -30,7 +30,7 @@
 
 - Run the following command in the root directory to start up the development server :
 
-  docker-compose -f docker-compose.dev.yml up --build
+      docker-compose -f docker-compose.dev.yml up --build
 
 **For Production build and deployment :**
 
