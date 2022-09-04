@@ -14,5 +14,5 @@ server/.idea
 .env.backend.dev
 .env.mongo
 .env.backend
-k8s/
+k8s/backend-env-secrets.yml
 aws/

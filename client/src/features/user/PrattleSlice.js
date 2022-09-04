@@ -59,12 +59,14 @@ export const prattleSlice = createSlice({
                 state.ui.interestsInputErrorMessage = "You can only add up to 10 interests. Please delete some to add new interests."
             } else {
                 const interest = action.payload
-                const index = state.user.interests.indexOf(interest)
-                if (index === -1) {
-                    state.user.interests.push(interest)
+                if(interest) {
+                    const index = state.user.interests.indexOf(interest)
+                    if (index === -1) {
+                        state.user.interests.push(interest)
+                    }
+                    localStorage.setItem(Constants.INTERESTS_IN_LOCAL_STORAGE, JSON.stringify(state.user.interests))
+                    state.ui.currentInterest = ""
                 }
-                localStorage.setItem(Constants.INTERESTS_IN_LOCAL_STORAGE, JSON.stringify(state.user.interests))
-                state.ui.currentInterest = ""
             }
         },
         removeInterest: (state, action) => {

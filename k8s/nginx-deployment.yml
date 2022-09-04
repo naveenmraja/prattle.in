@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: prattle-nginx
+  template:
+    metadata:
+      labels:
+        component: prattle-nginx
+    spec:
+      containers:
+        - name: prattle-nginx
+          image: naveenmraja/prattle-nginx:1.2
+          ports:
+            - containerPort: 80

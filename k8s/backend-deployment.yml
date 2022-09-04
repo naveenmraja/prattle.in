@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: prattle-backend
+  template:
+    metadata:
+      labels:
+        component: prattle-backend
+    spec:
+      containers:
+        - name: prattle-backend
+          image: naveenmraja/prattle-backend:1.1
+          ports:
+            - containerPort: 8080
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: backend-env-secrets
+                  key: REDIS_URL
+            - name: MONGODB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: backend-env-secrets
+                  key: MONGODB_URL
+            - name: GOOGLE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backend-env-secrets
+                  key: GOOGLE_SECRET_KEY

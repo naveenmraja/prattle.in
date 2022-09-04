@@ -1,38 +1,20 @@
 version: '3.8'
-x-aws-vpc: $AWS_VPC_ID
 services:
-  redis-server:
-    image: redis:7.0.4-alpine
-    container_name: redis-server
-    restart: always
-    working_dir: /home/redis
-  mongo-server:
-    image: mongo:latest
-    container_name: mongo-server
-    restart: always
-    env_file:
-      - ./.env.mongo
   prattle-backend:
     build:
       context: ./server
       dockerfile: DockerFile
-    image: naveenmraja/prattle-backend:1.0
+    image: naveenmraja/prattle-backend:1.1
     container_name: prattle-backend
     env_file:
       - ./.env.backend
-    depends_on:
-      - redis-server
-      - mongo-server
-    links:
-      - redis-server
-      - mongo-server
   nginx :
     build :
       context: .
       dockerfile: ./nginx/DockerFile
       args:
         - REACT_APP_GOOGLE_SITE_KEY=$REACT_APP_GOOGLE_SITE_KEY
-    image: naveenmraja/prattle-nginx:1.0
+    image: naveenmraja/prattle-nginx:1.2
     container_name: nginx
     ports :
       - "80:80"
@@ -40,38 +22,3 @@ services:
       - prattle-backend
     links:
       - prattle-backend
-x-aws-cloudformation:
-  Resources:
-    MongoserverService:
-      Properties:
-        NetworkConfiguration:
-          AwsvpcConfiguration:
-            AssignPublicIp: DISABLED
-            Subnets:
-            - $AWS_PRIVATE_SUBNET
-    NginxService:
-      Properties:
-        NetworkConfiguration:
-          AwsvpcConfiguration:
-            AssignPublicIp: DISABLED
-            Subnets:
-            - $AWS_PRIVATE_SUBNET
-    PrattlebackendService:
-      Properties:
-        NetworkConfiguration:
-          AwsvpcConfiguration:
-            AssignPublicIp: DISABLED
-            Subnets:
-            - $AWS_PRIVATE_SUBNET
-    RedisserverService:
-      Properties:
-        NetworkConfiguration:
-          AwsvpcConfiguration:
-            AssignPublicIp: DISABLED
-            Subnets:
-            - $AWS_PRIVATE_SUBNET
-    LoadBalancer:
-      Properties:
-        Subnets:
-        - $AWS_PUBLIC_SUBNET_1
-        - $AWS_PUBLIC_SUBNET_2
