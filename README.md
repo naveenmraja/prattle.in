@@ -39,15 +39,15 @@
 
     - **`backend-env-secrets.yml`**
 
-      	apiVersion: v1  
-      	kind: Secret  
-      	metadata:  
-      	  name: backend-env-secrets  
-      	type: Opaque  
-      	stringData:  
-      	  REDIS_URL: "redis://username:password@host:port"  
-      	  MONGODB_URL: "mongodb://username:password@host/"  
-      	  GOOGLE_SECRET_KEY: "$YOUR_GOOGLE_SECRET_KEY"
+            apiVersion: v1  
+            kind: Secret  
+            metadata:  
+              name: backend-env-secrets  
+            type: Opaque  
+            stringData:  
+              REDIS_URL: "redis://username:password@host:port"  
+              MONGODB_URL: "mongodb://username:password@host/"  
+              GOOGLE_SECRET_KEY: "$YOUR_GOOGLE_SECRET_KEY"
 
 - Update the image names of `mysecrets-backend` and `nginx` services in `docker-compose.yml` and build the images and push it to your docker repository using the following commands
 
