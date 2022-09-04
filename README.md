@@ -1,4 +1,3 @@
-
 ## [Prattle](http://prattle.in)
 
 [Prattle](http://prattle.in) is an anonymous chat app and a great way to meet new people. Prattle will pick someone random for you and create a private chat session. If you prefer to add your interests, Prattle will look to connect you with someone who shares some of your interests.
