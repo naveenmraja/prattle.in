@@ -71,3 +71,8 @@ app.get('/ping', async (req, res) => {
 httpServer.listen(8080, () => {
     log.info("Listening on port 8080")
 })
+
+process.on('SIGTERM', async () => {
+    await PrattleService.closeRedisConnection()
+    process.exit(0);
+});

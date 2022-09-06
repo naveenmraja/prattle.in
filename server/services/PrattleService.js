@@ -17,6 +17,15 @@ export async function initRedisConnection() {
     }
 }
 
+export async function closeRedisConnection() {
+    try {
+        log.info(`Closing redis connection`)
+        await redisClient.quit()
+    } catch (e) {
+        log.error(`Error occurred while closing redis client : ${e.message}`)
+    }
+}
+
 export async function incrementOnlineUsers() {
     try {
         log.info(`Incrementing online users count`)
@@ -248,7 +257,7 @@ export async function verifyUserToken(socket, message) {
                     }
                     const verificationAttempts = await redisClient.get(`VERIFICATION_ATTEMPTS_${socket.id}`)
                     if(!verificationAttempts) {
-                        await redisClient.set(`VERIFICATION_ATTEMPTS_${socket.id}`, 1)
+                        await redisClient.set(`VERIFICATION_ATTEMPTS_${socket.id}`, 1, 'EX', 60 * 60)
                     } else {
                         await redisClient.incr(`VERIFICATION_ATTEMPTS_${socket.id}`)
                     }
