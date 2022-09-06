@@ -1,6 +1,6 @@
-## [Prattle](http://prattle.in)
+## [Prattle](https://prattle.in)
 
-[Prattle](http://prattle.in) is an anonymous chat app and a great way to meet new people. Prattle will pick someone random for you and create a private chat session. If you prefer to add your interests, Prattle will look to connect you with someone who shares some of your interests.
+[Prattle](https://prattle.in) is an anonymous chat app and a great way to meet new people. Prattle will pick someone random for you and create a private chat session. If you prefer to add your interests, Prattle will look to connect you with someone who shares some of your interests.
 
 | [![gwFSAx.md.png](https://iili.io/gwFSAx.md.png)](https://freeimage.host/i/gwFSAx) |[![gwF89j.md.png](https://iili.io/gwF89j.md.png)](https://freeimage.host/i/gwF89j)  |
 |--|--|
@@ -39,15 +39,15 @@
 
     - **`backend-env-secrets.yml`**
 
-            apiVersion: v1  
-            kind: Secret  
-            metadata:  
-              name: backend-env-secrets  
-            type: Opaque  
-            stringData:  
-              REDIS_URL: "redis://username:password@host:port"  
-              MONGODB_URL: "mongodb://username:password@host/"  
-              GOOGLE_SECRET_KEY: "$YOUR_GOOGLE_SECRET_KEY"
+      ```apiVersion: v1  
+      kind: Secret  
+      metadata:  
+        name: backend-env-secrets  
+      type: Opaque  
+      stringData:  
+        REDIS_URL: "redis://username:password@host:port"  
+        MONGODB_URL: "mongodb://username:password@host/"  
+        GOOGLE_SECRET_KEY: "$YOUR_GOOGLE_SECRET_KEY"```
 
 - Update the image names of `mysecrets-backend` and `nginx` services in `docker-compose.yml` and build the images and push it to your docker repository using the following commands
 
@@ -71,6 +71,10 @@
 - Install ingress-nginx :
 
       kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
+      
+- Install cert-manager for SSL support :
+
+      kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.yaml  
 
 - To deploy to gcloud, run the following command from root directory :
 
