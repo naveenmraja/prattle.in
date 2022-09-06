@@ -59,9 +59,12 @@ class ChatView extends Component {
         }
         this.props.dispatch(addMessage(message))
         socket.emit(Constants.EVENT_SEND_MESSAGE, message)
+        this.textFieldRef.current.focus()
+        this.scrollToBottom()
     }
 
     componentDidUpdate(prevProps, prevState) {
+        this.textFieldRef.current.focus();
         this.scrollToBottom();
     }
 
@@ -207,7 +210,7 @@ class ChatView extends Component {
                             <Grid item md={1} xs={3}>
                                 <Button fullWidth variant="contained" color={"success"} sx={{height: "100%"}}
                                         disabled={this.props.user.status !== Constants.STATUS_BUSY}
-                                        onClick={this.sendMessage}>
+                                        onClick={this.sendMessage} type={"submit"}>
                                     <SendRounded fontSize={"large"}/>
                                 </Button>
                             </Grid>
