@@ -13,7 +13,7 @@ class ChatBanner extends Component {
         }
         const style = {
             maxWidth: "100%",
-            backgroundColor: this.props.color ? this.props.color : "#f07558",
+            backgroundColor: this.props.color ? this.props.color : "dimgrey",
             paddingBotttom: "0px",
             margin: "auto",
             width: "fit-content"

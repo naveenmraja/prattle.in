@@ -51,14 +51,16 @@ class ChatView extends Component {
     }
 
     sendMessage = () => {
-        const message = {
-            id: nanoid(),
-            socketId : this.props.user.socketId,
-            content : this.props.ui.currentMessage,
-            partnerSocketId : this.props.user.partnerSocketId
+        if(this.props.ui.currentMessage) {
+            const message = {
+                id: nanoid(),
+                socketId : this.props.user.socketId,
+                content : this.props.ui.currentMessage,
+                partnerSocketId : this.props.user.partnerSocketId
+            }
+            this.props.dispatch(addMessage(message))
+            socket.emit(Constants.EVENT_SEND_MESSAGE, message)
         }
-        this.props.dispatch(addMessage(message))
-        socket.emit(Constants.EVENT_SEND_MESSAGE, message)
         this.textFieldRef.current.focus()
         this.scrollToBottom()
     }
@@ -184,7 +186,7 @@ class ChatView extends Component {
                             <Grid container sx={{width: "100%"}} spacing={1}>
                                 <ChatBanner bannerMessage={headerMessage} />
                                 {messagesView}
-                                <ChatBanner color={"gray"} bannerMessage={this.props.ui.disconnectedMessage} />
+                                <ChatBanner color={"crimson"} bannerMessage={this.props.ui.disconnectedMessage} />
                                 <div ref={this.scrollRef} />
                             </Grid>
                         </StyledPaper>

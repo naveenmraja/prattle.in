@@ -12,11 +12,11 @@ class MessageCard extends Component {
             whiteSpace: "pre-wrap"
         }
         if(this.props.message.socketId === socketId) {
-            style.backgroundColor = "gray"
+            style.backgroundColor = "#388e3c"
             style.float = "right"
             style.mr = "1%"
         } else {
-            style.backgroundColor = "#388e3c"
+            style.backgroundColor = "dodgerblue"
             style.float = "left"
             style.ml = "1%"
         }
