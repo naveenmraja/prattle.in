@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: prattle-nginx
-          image: naveenmraja/prattle-nginx:1.5
+          image: naveenmraja/prattle-nginx:1.6.1
           ports:
             - containerPort: 80

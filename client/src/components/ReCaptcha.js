@@ -71,6 +71,11 @@ class ReCaptcha extends Component {
         this.props.dispatch(updateRefreshToken(false))
         this.props.dispatch(updateToken(token))
         this.verifyToken(token)
+        setTimeout(() => {
+            if(!this.props.user.verified && !this.props.user.verificationLimitExceeded) {
+                this.props.dispatch(updateRefreshToken(true))
+            }
+        }, 5000)
     }
 
     render() {

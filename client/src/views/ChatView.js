@@ -51,6 +51,11 @@ class ChatView extends Component {
     }
 
     sendMessage = () => {
+        if(this.props.user.status === Constants.STATUS_BUSY) {
+            this.props.dispatch(updateShowConfirmButton(false))
+            this.props.dispatch(updateShowRefreshButton(false))
+            this.props.dispatch(updateShowLoadingButton(false))
+        }
         if(this.props.ui.currentMessage) {
             const message = {
                 id: nanoid(),
@@ -124,6 +129,8 @@ class ChatView extends Component {
                 this.props.dispatch(updatePartnerSocketId(""))
                 this.props.dispatch(updateCurrentMessage(""))
                 this.props.dispatch(updateShowRefreshButton(true))
+                this.props.dispatch(updateShowConfirmButton(false))
+                this.props.dispatch(updateShowLoadingButton(false))
                 this.props.dispatch(updateDisconnectedMessage(Constants.STRANGER_DISCONNECTED_MESSAGE))
             }
         })

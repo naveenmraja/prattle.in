@@ -2,7 +2,7 @@
 
 [Prattle](https://prattle.in) is an anonymous chat app and a great way to meet new people. Prattle will pick someone random for you and create a private chat session. If you prefer to add your interests, Prattle will look to connect you with someone who shares some of your interests.
 
-| [![gwFSAx.md.png](https://iili.io/gwFSAx.md.png)](https://freeimage.host/i/gwFSAx) |[![gwF89j.md.png](https://iili.io/gwF89j.md.png)](https://freeimage.host/i/gwF89j)  |
+| [![gwFSAx.md.png](https://iili.io/gwFSAx.md.png)](https://freeimage.host/i/gwFSAx) |[![6SZjIV.md.png](https://iili.io/6SZjIV.md.png)](https://freeimage.host/i/6SZjIV)  |
 |--|--|
 
 **Technologies Used:**
