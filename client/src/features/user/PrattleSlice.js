@@ -1,65 +1,65 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 import {socket} from "../../utils/Constants.js";
 import * as Constants from "../../utils/Constants";
 
 const initialState = {
-    user : {
+    user: {
         socketId: "",
-        interests : localStorage.getItem(Constants.INTERESTS_IN_LOCAL_STORAGE) ?
+        interests: localStorage.getItem(Constants.INTERESTS_IN_LOCAL_STORAGE) ?
             JSON.parse(localStorage.getItem(Constants.INTERESTS_IN_LOCAL_STORAGE)) : [],
-        partnerSocketId : "",
-        status : Constants.STATUS_DISCONNECTED,
-        verified : false,
-        token : "",
-        refreshToken : false,
-        commonInterests : [],
-        verificationLimitExceeded : false
+        partnerSocketId: "",
+        status: Constants.STATUS_DISCONNECTED,
+        verified: false,
+        token: "",
+        refreshToken: false,
+        commonInterests: [],
+        verificationLimitExceeded: false
     },
-    ui : {
-        onlineUsers : 1,
-        currentInterest : "",
-        currentMessage : "",
-        messages : [],
-        messageIds : [],
-        interestsInputError : false,
-        interestsInputErrorMessage : "",
-        displayTermsAndConditions : false,
-        showLoader : true,
-        showVerifiedSnackbar : false,
-        showLimitExceededSnackbar : false,
-        showConfirmButton : false,
-        showRefreshButton : false,
-        showLoadingButton : false,
-        disconnectedMessage : ""
+    ui: {
+        onlineUsers: 1,
+        currentInterest: "",
+        currentMessage: "",
+        messages: [],
+        messageIds: [],
+        interestsInputError: false,
+        interestsInputErrorMessage: "",
+        displayTermsAndConditions: false,
+        showLoader: true,
+        showVerifiedSnackbar: false,
+        showLimitExceededSnackbar: false,
+        showConfirmButton: false,
+        showRefreshButton: false,
+        showLoadingButton: false,
+        disconnectedMessage: ""
     }
 }
 
 export const prattleSlice = createSlice({
-    name : "prattle",
+    name: "prattle",
     initialState,
-    reducers : {
-        updateSocketId : (state, action) => {
+    reducers: {
+        updateSocketId: (state, action) => {
             state.user.socketId = action.payload
         },
-        updatePartnerSocketId : (state, action) => {
+        updatePartnerSocketId: (state, action) => {
             state.user.partnerSocketId = action.payload
         },
-        updateCommonInterests : (state, action) => {
+        updateCommonInterests: (state, action) => {
             state.user.commonInterests = action.payload
         },
-        updateStatus : (state, action) => {
+        updateStatus: (state, action) => {
             state.user.status = action.payload
         },
-        updateOnlineUsers : (state, action) => {
+        updateOnlineUsers: (state, action) => {
             state.ui.onlineUsers = action.payload
         },
-        addInterest : (state, action) => {
-            if(state.user.interests.length === 10) {
+        addInterest: (state, action) => {
+            if (state.user.interests.length === 10) {
                 state.ui.interestsInputError = true
                 state.ui.interestsInputErrorMessage = "You can only add up to 10 interests. Please delete some to add new interests."
             } else {
                 const interest = action.payload
-                if(interest) {
+                if (interest) {
                     const index = state.user.interests.indexOf(interest)
                     if (index === -1) {
                         state.user.interests.push(interest)
@@ -79,74 +79,74 @@ export const prattleSlice = createSlice({
                 localStorage.setItem(Constants.INTERESTS_IN_LOCAL_STORAGE, JSON.stringify(state.user.interests))
             }
         },
-        updateCurrentMessage : (state, action) => {
+        updateCurrentMessage: (state, action) => {
             state.ui.currentMessage = action.payload
         },
-        addMessage : (state, action) => {
+        addMessage: (state, action) => {
             const message = action.payload
             state.ui.messages.push(message)
             state.ui.currentMessage = ""
         },
-        clearMessages : (state) => {
+        clearMessages: (state) => {
             state.ui.messages = []
             state.ui.currentMessage = ""
         },
-        addMessageId : (state, action) => {
+        addMessageId: (state, action) => {
             state.ui.messageIds.push(action.payload)
         },
-        clearMessageIds : (state) => {
+        clearMessageIds: (state) => {
             state.ui.messageIds = []
         },
-        updateCurrentInterest : (state, action) => {
+        updateCurrentInterest: (state, action) => {
             state.ui.currentInterest = action.payload
         },
-        toggleDisplayTermsAndConditions : (state) => {
+        toggleDisplayTermsAndConditions: (state) => {
             state.ui.displayTermsAndConditions = !state.ui.displayTermsAndConditions
         },
-        updateToken : (state, action) => {
+        updateToken: (state, action) => {
             state.user.token = action.payload
         },
-        verifyUser : (state) => {
+        verifyUser: (state) => {
             state.user.verified = true
         },
-        hideLoader : (state) => {
+        hideLoader: (state) => {
             state.ui.showLoader = false
         },
-        showLoader : (state) => {
+        showLoader: (state) => {
             state.ui.showLoader = true
         },
-        showVerifiedSnackbar : (state) => {
+        showVerifiedSnackbar: (state) => {
             state.ui.showVerifiedSnackbar = true
         },
-        hideVerifiedSnackbar : (state) => {
+        hideVerifiedSnackbar: (state) => {
             state.ui.showVerifiedSnackbar = false
         },
-        showLimitExceededSnackbar : (state) => {
+        showLimitExceededSnackbar: (state) => {
             state.ui.showLimitExceededSnackbar = true
         },
-        hideLimitExceededSnackbar : (state) => {
+        hideLimitExceededSnackbar: (state) => {
             state.ui.showLimitExceededSnackbar = false
         },
-        updateRefreshToken : (state, action) => {
+        updateRefreshToken: (state, action) => {
             state.user.refreshToken = action.payload
         },
-        setVerificationLimitExceeded : (state) => {
+        setVerificationLimitExceeded: (state) => {
             state.user.verificationLimitExceeded = true
         },
-        updateShowConfirmButton : (state, action) => {
+        updateShowConfirmButton: (state, action) => {
             state.ui.showConfirmButton = action.payload
         },
-        updateShowRefreshButton : (state, action) => {
+        updateShowRefreshButton: (state, action) => {
             state.ui.showRefreshButton = action.payload
         },
-        updateShowLoadingButton : (state, action) => {
+        updateShowLoadingButton: (state, action) => {
             state.ui.showLoadingButton = action.payload
         },
-        updateDisconnectedMessage : (state, action) => {
+        updateDisconnectedMessage: (state, action) => {
             state.ui.disconnectedMessage = action.payload
         },
-        disconnectConversation : (state) => {
-            if(state.user.status === Constants.STATUS_BUSY) {
+        disconnectConversation: (state) => {
+            if (state.user.status === Constants.STATUS_BUSY) {
                 state.ui.showLoadingButton = true
                 state.user.status = Constants.STATUS_CONNECTED
                 socket.emit(Constants.EVENT_END_CONVERSATION)
@@ -159,10 +159,10 @@ export const prattleSlice = createSlice({
                 socket.emit(Constants.EVENT_END_CONVERSATION)
             }
         },
-        startNewConversation : (state) => {
-            if(state.user.status !== Constants.STATUS_BUSY) {
+        startNewConversation: (state) => {
+            if (state.user.status !== Constants.STATUS_BUSY) {
                 socket.emit(Constants.EVENT_MAKE_USER_AVAILABLE)
-                socket.emit(Constants.EVENT_FIND_STRANGER, { interests : state.user.interests })
+                socket.emit(Constants.EVENT_FIND_STRANGER, {interests: state.user.interests})
                 state.user.status = Constants.STATUS_AVAILABLE
                 state.ui.showLoadingButton = true
                 state.ui.showRefreshButton = false
@@ -172,11 +172,37 @@ export const prattleSlice = createSlice({
     }
 })
 
-export const { updateSocketId, updatePartnerSocketId, updateStatus, updateOnlineUsers, addInterest, verifyUser, showLoader,
-    hideLoader, removeInterest, updateCurrentInterest, toggleDisplayTermsAndConditions, updateToken, updateCommonInterests,
-    addMessage, addMessageId, clearMessageIds, updateCurrentMessage, updateRefreshToken, updateShowConfirmButton,
-    updateShowRefreshButton, updateShowLoadingButton, clearMessages, updateDisconnectedMessage, disconnectConversation,
-    startNewConversation, setVerificationLimitExceeded, showVerifiedSnackbar, hideVerifiedSnackbar,
-    showLimitExceededSnackbar, hideLimitExceededSnackbar } = prattleSlice.actions
+export const {
+    updateSocketId,
+    updatePartnerSocketId,
+    updateStatus,
+    updateOnlineUsers,
+    addInterest,
+    verifyUser,
+    showLoader,
+    hideLoader,
+    removeInterest,
+    updateCurrentInterest,
+    toggleDisplayTermsAndConditions,
+    updateToken,
+    updateCommonInterests,
+    addMessage,
+    addMessageId,
+    clearMessageIds,
+    updateCurrentMessage,
+    updateRefreshToken,
+    updateShowConfirmButton,
+    updateShowRefreshButton,
+    updateShowLoadingButton,
+    clearMessages,
+    updateDisconnectedMessage,
+    disconnectConversation,
+    startNewConversation,
+    setVerificationLimitExceeded,
+    showVerifiedSnackbar,
+    hideVerifiedSnackbar,
+    showLimitExceededSnackbar,
+    hideLimitExceededSnackbar
+} = prattleSlice.actions
 
 export default prattleSlice.reducer

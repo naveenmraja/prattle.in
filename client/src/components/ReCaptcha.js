@@ -1,22 +1,26 @@
+import * as React from "react";
 import {Component} from "react";
 import {connect} from "react-redux";
 import * as Constants from "../utils/Constants";
-import {GoogleReCaptcha} from "react-google-recaptcha-v3";
-import * as React from 'react';
 import {socket} from "../utils/Constants";
+import {GoogleReCaptcha} from "react-google-recaptcha-v3";
 import {
     hideLimitExceededSnackbar,
-    hideLoader, hideVerifiedSnackbar, setVerificationLimitExceeded, showLimitExceededSnackbar,
+    hideLoader,
+    hideVerifiedSnackbar,
+    setVerificationLimitExceeded,
+    showLimitExceededSnackbar,
     showVerifiedSnackbar,
     updateRefreshToken,
     updateSocketId,
-    updateStatus, updateToken,
+    updateStatus,
+    updateToken,
     verifyUser
 } from "../features/user/PrattleSlice";
 
 function mapStateToProps(state) {
     return {
-        user : state.prattle.user
+        user: state.prattle.user
     }
 }
 
@@ -24,12 +28,12 @@ class ReCaptcha extends Component {
 
     componentDidMount() {
 
-        if(this.props.user.status !== Constants.STATUS_DISCONNECTED) {
+        if (this.props.user.status !== Constants.STATUS_DISCONNECTED) {
             this.props.dispatch(hideLoader())
         }
 
         socket.on(Constants.EVENT_CONNECT, () => {
-            if(this.props.user.status === Constants.STATUS_DISCONNECTED) {
+            if (this.props.user.status === Constants.STATUS_DISCONNECTED) {
                 this.props.dispatch(updateSocketId(socket.id))
                 this.props.dispatch(updateStatus(Constants.STATUS_CONNECTED))
                 this.props.dispatch(hideLoader())
@@ -37,7 +41,7 @@ class ReCaptcha extends Component {
         })
 
         socket.on(Constants.EVENT_USER_VERIFIED, (message) => {
-            if(!this.props.user.verified) {
+            if (!this.props.user.verified) {
                 this.props.dispatch(verifyUser())
                 this.props.dispatch(hideVerifiedSnackbar())
                 this.props.dispatch(showVerifiedSnackbar())
@@ -46,7 +50,7 @@ class ReCaptcha extends Component {
         })
 
         socket.on(Constants.EVENT_USER_UNVERIFIED, (message) => {
-            if(!this.props.user.verified && !this.props.user.verificationLimitExceeded) {
+            if (!this.props.user.verified && !this.props.user.verificationLimitExceeded) {
                 setTimeout(() => {
                     this.props.dispatch(updateRefreshToken(true))
                 }, 3000)
@@ -62,8 +66,8 @@ class ReCaptcha extends Component {
     }
 
     verifyToken = (token) => {
-        if(this.props.user.socketId && !this.props.user.verified) {
-            socket.emit(Constants.EVENT_VERIFY_USER_TOKEN, { token : token })
+        if (this.props.user.socketId && !this.props.user.verified) {
+            socket.emit(Constants.EVENT_VERIFY_USER_TOKEN, {token: token})
         }
     }
 
@@ -72,7 +76,7 @@ class ReCaptcha extends Component {
         this.props.dispatch(updateToken(token))
         this.verifyToken(token)
         setTimeout(() => {
-            if(!this.props.user.verified && !this.props.user.verificationLimitExceeded) {
+            if (!this.props.user.verified && !this.props.user.verificationLimitExceeded) {
                 this.props.dispatch(updateRefreshToken(true))
             }
         }, 5000)

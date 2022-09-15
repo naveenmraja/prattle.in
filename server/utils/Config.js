@@ -1,13 +1,13 @@
 export const mongooseOptions = {
-    development : {
+    development: {
         minPoolSize: 1,
         maxPoolSize: 5,
         serverSelectionTimeoutMS: 5000,
         socketTimeoutMS: 45000,
         family: 4
     },
-    production : {
-        autoIndex : false,
+    production: {
+        autoIndex: false,
         minPoolSize: 5,
         maxPoolSize: 20,
         serverSelectionTimeoutMS: 5000,

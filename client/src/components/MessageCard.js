@@ -1,4 +1,4 @@
-import { Component } from "react";
+import {Component} from "react";
 import {Card, CardContent, Grid, Typography} from "@mui/material";
 
 class MessageCard extends Component {
@@ -11,7 +11,7 @@ class MessageCard extends Component {
             width: "fit-content",
             whiteSpace: "pre-wrap"
         }
-        if(this.props.message.socketId === socketId) {
+        if (this.props.message.socketId === socketId) {
             style.backgroundColor = "#388e3c"
             style.float = "right"
             style.mr = "1%"
@@ -23,7 +23,7 @@ class MessageCard extends Component {
         return (
             <Grid item md={12} xs={12} key={`chat-message-${this.props.index}`}>
                 <Card raised sx={style}>
-                    <CardContent >
+                    <CardContent>
                         <Typography>
                             {this.props.message.content}
                         </Typography>

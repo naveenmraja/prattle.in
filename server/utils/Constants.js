@@ -32,6 +32,6 @@ export function getEnvironmentVariable(name) {
 }
 
 export const redisClient = createClient({
-    url : getEnvironmentVariable(REDIS_URL)
+    url: getEnvironmentVariable(REDIS_URL)
 })
 redisClient.on('error', (err) => console.log('Redis Client Error', err));

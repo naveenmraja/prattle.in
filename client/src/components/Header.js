@@ -3,17 +3,17 @@ import {AppBar, Chip, CssBaseline, FormControl, Grid, Link, Toolbar} from "@mui/
 import {connect} from "react-redux";
 import {Circle} from "@mui/icons-material";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
-import {socket} from "../utils/Constants";
 import * as Constants from "../utils/Constants";
+import {socket} from "../utils/Constants";
 import {updateOnlineUsers} from "../features/user/PrattleSlice";
 
 function mapStateToProps(state) {
     return {
-        onlineUsers : state.prattle.ui.onlineUsers
+        onlineUsers: state.prattle.ui.onlineUsers
     }
 }
 
-const theme = createTheme({ palette: { mode: 'dark' } });
+const theme = createTheme({palette: {mode: 'dark'}});
 
 class Header extends Component {
 
@@ -32,7 +32,7 @@ class Header extends Component {
     render() {
         return (
             <ThemeProvider theme={theme}>
-                <CssBaseline />
+                <CssBaseline/>
                 <AppBar position="static">
                     <Toolbar>
                         <Grid container>
@@ -42,7 +42,7 @@ class Header extends Component {
                                 </Link>
                             </Grid>
                             <Grid item xs={6}>
-                                <FormControl sx={{ mt: 3, mb: 3, float: 'right'}}>
+                                <FormControl sx={{mt: 3, mb: 3, float: 'right'}}>
                                     <Chip icon={<Circle fontSize={"xs"}/>}
                                           label={"Online : " + this.props.onlineUsers}
                                           variant="outlined" color={"success"} onClick={this.getOnlineUsers}/>

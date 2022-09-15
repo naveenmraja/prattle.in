@@ -1,11 +1,8 @@
 import * as Constants from '../utils/Constants.js'
-import {
-    redisClient,
-    getEnvironmentVariable
-} from "../utils/Constants.js"
+import {getEnvironmentVariable, redisClient} from '../utils/Constants.js'
 import {Stranger} from "../model/Stranger.js"
 import mongoose from "mongoose";
-import { log } from '../utils/Logger.js'
+import {log} from '../utils/Logger.js'
 
 export async function initRedisConnection() {
     try {
@@ -37,8 +34,8 @@ export async function incrementOnlineUsers() {
 
 export function getVerifyTokenResponse(secretKey, token) {
     const request = {
-        response : token,
-        secret : getEnvironmentVariable(Constants.GOOGLE_SECRET_KEY)
+        response: token,
+        secret: getEnvironmentVariable(Constants.GOOGLE_SECRET_KEY)
     }
     let formBody = [];
     for (let property in request) {
@@ -49,7 +46,7 @@ export function getVerifyTokenResponse(secretKey, token) {
     formBody = formBody.join("&");
     log.info(`Request : ${Constants.GOOGLE_SITE_VERIFY_URL} ${formBody}`)
     return fetch(Constants.GOOGLE_SITE_VERIFY_URL, {
-        method : "POST",
+        method: "POST",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
@@ -61,7 +58,7 @@ export async function getOnlineUsers(socket) {
     try {
         const onlineUsers = await redisClient.get(Constants.USERS_ONLINE)
         log.info(`Total online users : ${onlineUsers}`)
-        socket.emit(Constants.EVENT_GET_ONLINE_USERS, { onlineUsers : onlineUsers })
+        socket.emit(Constants.EVENT_GET_ONLINE_USERS, {onlineUsers: onlineUsers})
     } catch (e) {
         log.error(`Error occurred while getting Online users count ${e.message}`)
     }
@@ -74,14 +71,15 @@ async function isUserVerified(socket) {
 
 export async function addStranger(socket, payload) {
     try {
-        if(await isUserVerified(socket) && payload.interests.length <= 10) {
+        if (await isUserVerified(socket) && payload.interests.length <= 10) {
             log.info(`Add stranger : ${socket.id} ${JSON.stringify(payload)}`)
             const interests = payload.interests
             const stranger = new Stranger({
-                socketId : socket.id,
-                status : Constants.STATUS_CONNECTED,
+                socketId: socket.id,
+                status: Constants.STATUS_CONNECTED,
                 interests: interests,
-                connectedTo : "" })
+                connectedTo: ""
+            })
             await stranger.save()
         }
     } catch (e) {
@@ -91,10 +89,10 @@ export async function addStranger(socket, payload) {
 
 export async function updateInterests(socket, payload) {
     try {
-        if(await isUserVerified(socket) && payload.interests.length <= 10) {
+        if (await isUserVerified(socket) && payload.interests.length <= 10) {
             log.info(`Updating interests for ${socket.id} : ${JSON.stringify(payload)}`)
             const interests = payload.interests
-            await Stranger.updateOne({ socketId : socket.id }, { interests : interests })
+            await Stranger.updateOne({socketId: socket.id}, {interests: interests})
         }
     } catch (e) {
         log.error(`Error occurred while updating interests for ${socket.id} : ${e.message}`)
@@ -103,9 +101,9 @@ export async function updateInterests(socket, payload) {
 
 export async function makeUserAvailable(socket) {
     try {
-        if(await isUserVerified(socket)) {
+        if (await isUserVerified(socket)) {
             log.info(`Making user ${socket.id} available for new chat connection`)
-            await Stranger.updateOne({ socketId : socket.id }, { status : Constants.STATUS_AVAILABLE })
+            await Stranger.updateOne({socketId: socket.id}, {status: Constants.STATUS_AVAILABLE})
         }
     } catch (e) {
         log.error(`Error while making user ${socket.id} available for a new chat connection : ${e.message}`)
@@ -114,14 +112,14 @@ export async function makeUserAvailable(socket) {
 
 export async function sendMessage(socket, message) {
     try {
-        if(await isUserVerified(socket)) {
+        if (await isUserVerified(socket)) {
             const partnerId = await redisClient.get(socket.id)
             log.info(`Sending message ${message.content} from ${socket.id} to ${partnerId}`)
-            if(partnerId === message.partnerSocketId) {
+            if (partnerId === message.partnerSocketId) {
                 const payload = {
                     id: message.id,
-                    from : socket.id,
-                    message : message.content
+                    from: socket.id,
+                    message: message.content
                 }
                 socket.to(partnerId).emit(Constants.EVENT_RECEIVE_MESSAGE, payload)
             }
@@ -133,25 +131,25 @@ export async function sendMessage(socket, message) {
 
 export async function findStranger(socket, message) {
     try {
-        if(await isUserVerified(socket)) {
+        if (await isUserVerified(socket)) {
             const socketId = socket.id
             log.info(`Finding stranger for ${socketId} ${JSON.stringify(message)}`)
             const interests = message.interests ? message.interests : []
             const query = {
-                socketId : { $ne : socketId },
-                status : Constants.STATUS_AVAILABLE
+                socketId: {$ne: socketId},
+                status: Constants.STATUS_AVAILABLE
             }
-            if(interests.length > 0) {
-                query.interests = { $in : interests}
+            if (interests.length > 0) {
+                query.interests = {$in: interests}
             }
             const session = await mongoose.startSession()
             session.startTransaction()
             const potentialPartners = await Stranger.find(query).limit(5).exec()
             let partner
-            if(potentialPartners.length === 0) {
+            if (potentialPartners.length === 0) {
                 partner = await Stranger.findOne({
-                    socketId : { $ne : socketId },
-                    status : Constants.STATUS_AVAILABLE
+                    socketId: {$ne: socketId},
+                    status: Constants.STATUS_AVAILABLE
                 }).exec()
             } else {
                 potentialPartners.map((stranger) => {
@@ -162,23 +160,29 @@ export async function findStranger(socket, message) {
                     return (prev.commonInterests > current.commonInterests) ? prev : current
                 })
             }
-            if(partner) {
+            if (partner) {
                 const partnerSocketId = partner.socketId
-                await Stranger.updateOne({ socketId : socketId }, { status : Constants.STATUS_BUSY, connectedTo : partnerSocketId })
-                await Stranger.updateOne({ socketId : partnerSocketId }, { status : Constants.STATUS_BUSY, connectedTo : socketId })
+                await Stranger.updateOne({socketId: socketId}, {
+                    status: Constants.STATUS_BUSY,
+                    connectedTo: partnerSocketId
+                })
+                await Stranger.updateOne({socketId: partnerSocketId}, {
+                    status: Constants.STATUS_BUSY,
+                    connectedTo: socketId
+                })
                 await redisClient.set(socketId, partnerSocketId)
                 await redisClient.set(partnerSocketId, socketId)
             }
             await session.commitTransaction()
             await session.endSession()
-            if(partner) {
+            if (partner) {
                 socket.emit(Constants.EVENT_PARTNER_CONNECTED, {
-                    connectedTo : partner.socketId,
-                    interests : partner.interests
+                    connectedTo: partner.socketId,
+                    interests: partner.interests
                 })
                 socket.to(partner.socketId).emit(Constants.EVENT_PARTNER_CONNECTED, {
-                    connectedTo : socketId,
-                    interests : interests
+                    connectedTo: socketId,
+                    interests: interests
                 })
             } else {
                 socket.emit(Constants.EVENT_PARTNER_NOT_FOUND)
@@ -191,16 +195,16 @@ export async function findStranger(socket, message) {
 
 export async function endConversation(socket) {
     try {
-        if(await isUserVerified(socket)) {
+        if (await isUserVerified(socket)) {
             const partnerId = await redisClient.get(socket.id)
             log.info(`Ending conversation of ${socket.id} and ${partnerId}`)
-            if(partnerId) {
+            if (partnerId) {
                 await redisClient.del(socket.id)
                 await redisClient.del(partnerId)
-                await Stranger.updateOne({ socketId: partnerId }, { status : Constants.STATUS_CONNECTED, connectedTo : "" })
+                await Stranger.updateOne({socketId: partnerId}, {status: Constants.STATUS_CONNECTED, connectedTo: ""})
                 socket.to(partnerId).emit(Constants.EVENT_PARTNER_DISCONNECTED)
             }
-            await Stranger.updateOne({ socketId :  socket.id }, { status : Constants.STATUS_CONNECTED, connectedTo : "" })
+            await Stranger.updateOne({socketId: socket.id}, {status: Constants.STATUS_CONNECTED, connectedTo: ""})
         }
     } catch (e) {
         log.error(`Error occurred while ending conversation of ${socket.id} : ${e.message}`)
@@ -211,14 +215,14 @@ export async function disconnectUser(socket) {
     try {
         const partnerId = await redisClient.get(socket.id)
         log.info(`User ${socket.id} got disconnected. Partner : ${partnerId}`)
-        if(partnerId) {
+        if (partnerId) {
             await redisClient.del(socket.id)
             await redisClient.del(partnerId)
             socket.to(partnerId).emit(Constants.EVENT_PARTNER_DISCONNECTED)
-            await Stranger.updateOne({ socketId: partnerId }, { status : Constants.STATUS_CONNECTED, connectedTo : "" })
+            await Stranger.updateOne({socketId: partnerId}, {status: Constants.STATUS_CONNECTED, connectedTo: ""})
         }
-        await Stranger.updateOne({ socketId :  socket.id }, { status : Constants.STATUS_DISCONNECTED, connectedTo : "" })
-        if(await isUserVerified(socket)) {
+        await Stranger.updateOne({socketId: socket.id}, {status: Constants.STATUS_DISCONNECTED, connectedTo: ""})
+        if (await isUserVerified(socket)) {
             await redisClient.del(`VERIFIED_${socket.id}`)
         }
         await redisClient.decr(Constants.USERS_ONLINE)
@@ -238,16 +242,16 @@ async function canVerifyUserToken(socket) {
 
 export async function verifyUserToken(socket, message) {
     try {
-        if(await canVerifyUserToken(socket)) {
+        if (await canVerifyUserToken(socket)) {
             const token = message.token
             const secretKey = getEnvironmentVariable(Constants.GOOGLE_SECRET_KEY)
             log.info(`Verifying token ${token} for ${socket.id}`)
             const response = await getVerifyTokenResponse(secretKey, token)
-            if(response.ok) {
+            if (response.ok) {
                 const result = await response.json()
                 log.info(`Verify token response for ${socket.id}: ${JSON.stringify(result)}`)
-                if(result.success) {
-                    if(result.score >= 0.6) {
+                if (result.success) {
+                    if (result.score >= 0.6) {
                         log.info(`User verification successful for ${socket.id}. Score : ${result.score}`)
                         await redisClient.set(`VERIFIED_${socket.id}`, "true")
                         socket.emit(Constants.EVENT_USER_VERIFIED, message)
@@ -256,7 +260,7 @@ export async function verifyUserToken(socket, message) {
                         socket.emit(Constants.EVENT_USER_UNVERIFIED, message)
                     }
                     const verificationAttempts = await redisClient.get(`VERIFICATION_ATTEMPTS_${socket.id}`)
-                    if(!verificationAttempts) {
+                    if (!verificationAttempts) {
                         await redisClient.set(`VERIFICATION_ATTEMPTS_${socket.id}`, 1, 'EX', 60 * 60)
                     } else {
                         await redisClient.incr(`VERIFICATION_ATTEMPTS_${socket.id}`)

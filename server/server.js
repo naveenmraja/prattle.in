@@ -1,14 +1,12 @@
 import express from 'express'
-import { createServer } from 'http'
-import { Server } from 'socket.io'
+import {createServer} from 'http'
+import {Server} from 'socket.io'
 import mongoose from "mongoose"
 import {mongooseOptions} from "./utils/Config.js"
 import * as Constants from './utils/Constants.js'
-import {
-    getEnvironmentVariable
-} from './utils/Constants.js'
+import {getEnvironmentVariable} from './utils/Constants.js'
 import * as PrattleService from "./services/PrattleService.js"
-import { log } from './utils/Logger.js'
+import {log} from './utils/Logger.js'
 
 await PrattleService.initRedisConnection()
 await mongoose.connect(getEnvironmentVariable(Constants.MONGODB_URL),
@@ -20,11 +18,11 @@ const httpServer = createServer(app)
 const io = new Server(httpServer)
 
 io.on("connection", async (socket) => {
-    try  {
+    try {
         log.info(`New connection created : ${socket.id}`)
         await PrattleService.incrementOnlineUsers()
 
-        socket.on(Constants.EVENT_GET_ONLINE_USERS, async() => {
+        socket.on(Constants.EVENT_GET_ONLINE_USERS, async () => {
             await PrattleService.getOnlineUsers(socket)
         })
 
@@ -48,7 +46,7 @@ io.on("connection", async (socket) => {
             await PrattleService.findStranger(socket, message)
         })
 
-        socket.on(Constants.EVENT_END_CONVERSATION, async() => {
+        socket.on(Constants.EVENT_END_CONVERSATION, async () => {
             await PrattleService.endConversation(socket)
         })
 

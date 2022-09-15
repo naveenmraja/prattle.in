@@ -1,4 +1,4 @@
-import { Component } from "react";
+import {Component} from "react";
 import {Divider, Grid, Modal, Paper, Typography} from "@mui/material";
 import {connect} from "react-redux";
 import {toggleDisplayTermsAndConditions} from "../features/user/PrattleSlice";
@@ -6,11 +6,11 @@ import {styled} from "@mui/styles";
 
 function mapStateToProps(state) {
     return {
-        displayTermsAndConditions : state.prattle.ui.displayTermsAndConditions
+        displayTermsAndConditions: state.prattle.ui.displayTermsAndConditions
     }
 }
 
-const StyledPaper = styled(Paper)(({ theme }) => ({
+const StyledPaper = styled(Paper)(({theme}) => ({
     ...theme.typography.body2,
     color: theme.palette.text.secondary,
     fontSize: "1rem"
@@ -70,10 +70,13 @@ class TermsAndConditions extends Component {
                                     Prattle has no control over, and assumes no responsibility for, the content,
                                     privacy policies, or practices of any third party web sites or services.
                                     You further acknowledge and agree that Prattle shall not be responsible or liable,
-                                    directly or indirectly, for any damage or loss caused or alleged to be caused by or in
-                                    connection with use of or reliance on any such content, goods or services available on or
+                                    directly or indirectly, for any damage or loss caused or alleged to be caused by or
+                                    in
+                                    connection with use of or reliance on any such content, goods or services available
+                                    on or
                                     through any such eb sites or services.<br/><br/>
-                                    We strongly advise you to read the terms and conditions and privacy policies of any third-party
+                                    We strongly advise you to read the terms and conditions and privacy policies of any
+                                    third-party
                                     web sites or services that you visit.<br/><br/>
                                 </Typography>
                             </Grid>
@@ -93,11 +96,14 @@ class TermsAndConditions extends Component {
                                     <b>Governing Law</b><br/><br/>
                                     These Terms shall be governed and construed in accordance with the laws of
                                     Tamil Nadu, India, without regard to its conflict of law provisions.<br/><br/>
-                                    Our failure to enforce any right or provision of these Terms will not be considered a
+                                    Our failure to enforce any right or provision of these Terms will not be considered
+                                    a
                                     waiver of those rights. If any provision of these Terms is held to be invalid or
                                     unenforceable by a court, the remaining provisions of these Terms will remain in
-                                    effect. These Terms constitute the entire agreement between us regarding our Service,
-                                    and supersede and replace any prior agreements we might have between us regarding the
+                                    effect. These Terms constitute the entire agreement between us regarding our
+                                    Service,
+                                    and supersede and replace any prior agreements we might have between us regarding
+                                    the
                                     Service.<br/><br/>
                                 </Typography>
                             </Grid>
